@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghost-blog-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ghost-blog
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ghost-blog
+    spec:
+      containers:
+      - name: ghost-blog
+        image: ghost:4.1.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: "NODE_ENV"
+          value: "development" 
+        imagePullPolicy: Always
