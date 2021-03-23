@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ghost-blog-deployment
+  name: ghost-blog-deployment-dev
 spec:
   selector:
     matchLabels:
-      app: ghost-blog
+      app: ghost-blog-dev
   replicas: 1
   template:
     metadata:
       labels:
-        app: ghost-blog
+        app: ghost-blog-dev
     spec:
       containers:
-      - name: ghost-blog
+      - name: ghost-blog-dev
         image: ghost:4.1.0
         ports:
         - containerPort: 8000
