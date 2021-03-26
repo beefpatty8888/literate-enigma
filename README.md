@@ -11,8 +11,11 @@ gcloud services enable compute.googleapis.com
 #This enables the GKE API
 gcloud services enable container.googleapis.com
 
-#This enables the Google Cloud SQL API
+#This enables the Google Cloud SQL Admin API
 gcloud services enable sqladmin.googleapis.com
+
+#This enables the Google Cloud SQL API
+gcloud services enable sql-component.googleapis.com
 
 #This may not be needed since the ghost blog container is hosted in DockerHub
 #gcloud services enable containerregistry.googleapis.com
