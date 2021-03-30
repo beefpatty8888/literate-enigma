@@ -67,6 +67,11 @@ Additional steps for a production, highly available install of Ghost Blog. Appar
 gcloud services enable servicenetworking.googleapis.com
 ```
 
+## Enable the FireStore API
+```
+gcloud services enable file.googleapis.com
+```
+
 ## Allocate a range for the Google Cloud MySQL database
 See: 
 https://cloud.google.com/vpc/docs/configure-private-services-access?_ga=2.157578361.-2113870819.1605925679
@@ -97,10 +102,16 @@ https://cloud.google.com/sql/docs/mysql/create-instance#gcloud
 ```
 gcloud sql users set-password root --host=% --instance <database_name> --password <password>
 ```
-## Create a Google Cloud Storage bucket or FileStore NFS share
-Reference https://stackoverflow.com/questions/48222871/i-am-trying-to-use-gcs-bucket-as-the-volume-in-gke-pod for mounting a GCS bucket in GKE.
+## Create FileStore NFS share
+See: 
+https://cloud.google.com/sdk/gcloud/reference/filestore/instances/create
+https://cloud.google.com/filestore/docs/accessing-fileshares
 
-Alternatively, Google Filestore that uses NFS may also be a solution: https://cloud.google.com/filestore/docs/accessing-fileshares
+NOTE: 1024 GB is the mimimum capacity for a FileStore instance. Monthly cost is more than $200 a month,
+so this is an expensive option.
+```
+gcloud filestore instances create ghost-blog --description="ghost-blog filestore" --tier=STANDARD --file-share=name=ghostblog,capacity=1024GB --network=name=gke --zone=us-central1-c
+```
 
 ## Deploy the production Ghost Blog Application, Service and Ingress
 May require a separate ingress type deployment for session affinity based on the "ghost-admin-api-session" cookie.
