@@ -102,6 +102,10 @@ https://cloud.google.com/sql/docs/mysql/create-instance#gcloud
 ```
 gcloud sql users set-password root --host=% --instance <database_name> --password <password>
 ```
+## Deploy Ceph and Rook ?
+See:
+https://timberry.dev/posts/gke-storage-service-with-rook-ceph/
+
 ## Create FileStore NFS share
 See: 
 https://cloud.google.com/sdk/gcloud/reference/filestore/instances/create
