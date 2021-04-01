@@ -47,6 +47,8 @@ resource "google_compute_router_nat" "gke-nat" {
 
 resource "google_container_cluster" "k8s-cluster" {
   provider           = google-beta
+  // the project has to specified one more time, probably because 
+  // of the google-beta provider needed for the "networking_mode" parameter.
   project            = "gke-ghost-blog-309416"
   name               = "ghost-blog"
   location           = "us-central1-c"
