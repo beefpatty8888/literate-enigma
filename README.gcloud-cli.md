@@ -20,22 +20,32 @@ gcloud services enable sql-component.googleapis.com
 #This may not be needed since the ghost blog container is hosted in DockerHub
 #gcloud services enable containerregistry.googleapis.com
 ```
-
-## Apply Terraform Configuration File
-This creates the VPC network, VPC subnets, the Cloud NAT and Router and the GKE cluster
+## Create the VPC network
 ```
-terraform init
-
-terraform plan
-
-terraform apply
+gcloud compute networks create gke --subnet-mode=custom
 ```
+
+### Create the VPC subnet
+See https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#custom_subnet
+```
+gcloud compute networks subnets create gke-subnet-01 --network=gke --region us-central1 --range 192.168.0.0/20 --secondary-range gke-pods=10.4.0.0/14,gke-services=10.0.32.0/20 --enable-private-ip-google-access
+```
+
+### Create the Cloud NAT and Router
 See:
-https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started
-https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router_nat 
-https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network
-https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork
-https://github.com/hashicorp/terraform-provider-google/issues/1382
+https://cloud.google.com/sdk/gcloud/reference/compute/routers/create
+https://cloud.google.com/nat/docs/using-nat
+```
+gcloud compute routers create gke-router --network=gke
+
+gcloud compute routers nats create gke-nat --router=gke-router --auto-allocate-nat-external-ips --nat-all-subnet-ip-ranges --enable-logging
+```
+
+## Create the GKE cluster
+See https://cloud.google.com/sdk/gcloud/reference/container/clusters/create#--scopes for specifying the scopes
+```
+gcloud container clusters create <cluster-name> --network=gke --subnetwork=gke-subnet-01  --cluster-secondary-range-name=gke-pods --services-secondary-range-name=gke-services --enable-private-nodes --enable-ip-alias --enable-master-global-access --no-enable-master-authorized-networks --master-ipv4-cidr 172.16.0.16/28 --num-nodes=2 --machine-type=e2-small --scopes=https://www.googleapis.com/auth/compute.readonly,sql-admin,gke-default --zone us-central1-c
+```
 
 ## Configure kubectl
 ```
