@@ -24,6 +24,8 @@ gcloud services enable sql-component.googleapis.com
 ## Apply Terraform Configuration File
 This creates the VPC network, VPC subnets, the Cloud NAT and Router and the GKE cluster
 ```
+cd vpc-gke
+
 terraform init
 
 terraform plan
